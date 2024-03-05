@@ -114,7 +114,7 @@ router.route("/register")
         if(oldUser){
             console.log("hey that user already exists")
             console.log(oldUser)
-            return res.status(400).json("user already exists")
+            return res.status(401).json("user already exists")
         }
 
         //check if user email already exists
@@ -122,7 +122,7 @@ router.route("/register")
         if (oldEmail) {
             console.log("hey that email has already been used")
             console.log(oldEmail)
-            return res.status(400).json("email already exists")
+            return res.status(401).json("email already exists")
         }
         //if not create user hash password
         console.log("creating new user...")

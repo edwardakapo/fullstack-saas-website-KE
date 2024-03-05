@@ -1,49 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import ProfilePage from './pages/ProfilePage';
-import getGoogleOAuthURL from './utils/getGoogleUrl';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/system';
+import HeroSection from './HeroSection';
+import Header from './Header';
 
+
+//increaase spacing between 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p className='text-4xl text-red-500'>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href={getGoogleOAuthURL()}
-        >
-          Google ouath testing
-        </a>
-      </header>
+    <div className="flex-col space-y-32 ">
+      <Header />
+      <HeroSection />
+      <section className="bg-stone-50 shadow-md px-6 py-3">
+        <h5>User Avatar here    and  name here</h5>
+        <h1 className='text-xl mb-3'>Post Title</h1>
+        <p>Posts should go here</p>
+      </section>
+      <footer>This is the footer</footer>
     </div>
   );
 }
 
 export default App;
-
-/*
-function App() {
-  return (
-    <Router>
-      <Header />
-      <Switch>
-        <Route path="/login" component={LoginPage} />
-        <Route path="/profile" component={ProfilePage} />
-        <Route path="/" component={HomePage} />
-      </Switch>
-      <Footer />
-    </Router>
-  );
-}
-
-export default App;
-*/
