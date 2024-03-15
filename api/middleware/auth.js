@@ -5,14 +5,14 @@ const  { APP_TOKEN } = process.env;
 
 
 const verifyToken = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Get the token from the 'token' cookie
+    const token = req.cookies.token;
+
+    if (!token) {
         console.log("token invalid CHECK AUTHORIZATION HEADER")
         return res.status(402).json("A token is required for authentication")
     }
 
-    const token = authHeader.split(' ')[1]; // Extract the JWT from the Authorization header
 
     jwt.verify(token , APP_TOKEN , function(err , decoded) {
         if(err){

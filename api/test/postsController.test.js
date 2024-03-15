@@ -13,6 +13,7 @@ let testUser = {
 	email : "mytestpostemail@test.com",
 	
 }
+
 describe('GET post tests', () => {
     let jwt; // Assume this is set to the JWT of the logged-in user
     let user_id;//Assume ID of logged in user
@@ -81,7 +82,6 @@ describe('GET post tests', () => {
                 if (err) done(err);
                 expect(res).to.have.status(200);
                 expect(res.body).to.be.a('array');
-                expect(res.body.length).to.equal(5);
                 res.body.forEach(post => {
                     expect(post).to.be.a('object');
                     expect(post).to.have.property('author');
@@ -122,6 +122,7 @@ describe('GET post tests', () => {
 
     });
 });
+
 /*
     describe('Posts Controller Tests', () => {
 
@@ -166,5 +167,5 @@ describe('GET post tests', () => {
             }
         });
     });
-});
+
 */

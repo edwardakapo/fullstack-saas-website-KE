@@ -12,30 +12,6 @@ const auth = require("../middleware/auth")
 
 
 
-
-
-function redirectIfLoggedIn (req , res , next){
-    const authHeader = req.headers.autorization
-    if(authHeader && authHeader.startsWith('Bearer ')){
-        const token = authHeader.split(' ')[1] // extract token
-
-        jwt.verify(token , APP_TOKEN , (err , decoded) => {
-            if(!err) {
-                // The JWT is valid, redirect to the home page
-                res.redirect('/home');
-            }
-            else {
-                // The JWT is invalid, proceed to the next middleware function
-                next();
-            }
-        });
-    }
-    // No JWT, proceed to the next middleware function
-    next();
-}
-
-
-
 //login to an existing user, if not return error code to be handled by front-end
 router.route('/login')
 .get( (req, res, next) => {
@@ -63,7 +39,7 @@ router.route('/login')
 
         }
         else {
-            console.log("user does not exist page should be re-rendered")
+            console.log("user does not exist send notification ")
             return res.status(400).json("invalid user or password")
         }
 
@@ -80,6 +56,10 @@ router.route('/login')
             const token = jwt.sign (
                 payload , secret , {expiresIn: '2h'}
             );
+            res.cookie('token', token, { httpOnly: true });
+            res.cookie('user', JSON.stringify(user), { httpOnly: true });
+            res.cookie('userPicture' , user.profileImageUrl)
+            res.cookie("isLoggedIn", "True");
             res.status(200).json({Token : token , userObj : user})
         }
         else {
@@ -96,7 +76,7 @@ router.route('/login')
 
 //register a new user if already exists send error code to be handled by front-end
 router.route("/register")
-.get( redirectIfLoggedIn ,(req , res) => {
+.get( (req , res) => {
     console.log("register route")
     res.status(200).json("User Register page")
 })
@@ -147,6 +127,13 @@ router.route("/register")
         );
         console.log('saving user to database')
         await user.save()
+
+        res.cookie('token', token, { httpOnly: true });
+        res.cookie('user', JSON.stringify(user), { httpOnly: true });
+        res.cookie('userPicture' , user.profileImageUrl)
+
+        res.cookie("isLoggedIn", "True");
+        
         res.status(200).json({user : user , Token : token});
         console.log("user created")
 
@@ -166,8 +153,10 @@ router.route("/logout")
     try{
         // The 'jwt' cookie should exist at this point because the auth middleware has already checked it
         // Clear the cookie
-        res.clearCookie('jwt');
-        res.status(200).send('cookie deleted');
+        // Clear the 'token' and 'user' cookies
+        res.clearCookie('token');
+        res.clearCookie('user');
+        res.status(200).send('cookies deleted');
     }
     catch (err) {
         console.log(err)
@@ -204,6 +193,13 @@ router.get("/oauth/google", async (req, res) => {
         const token = jwt.sign (
             payload , secret , {expiresIn: '2h'}
         );
+        // Set cookies
+        res.cookie('token', token, { httpOnly: true });
+        res.cookie('user', JSON.stringify(user), { httpOnly: true });
+        res.cookie('userPicture' , googleUser.picture)
+        res.cookie("isLoggedIn", "True");
+        //return res.redirect('/');
+        
         return res.status(200).json({message : "User exists logging in" ,user : user , Bearer : token});
 
     }
@@ -229,7 +225,14 @@ router.get("/oauth/google", async (req, res) => {
             payload , secret , {expiresIn: '2h'}
         );
         console.log("user created")
-        return res.status(201).json("user is created and saved" , {user : newUser , Bearer : token});
+        // Set cookies
+        res.cookie('token', token, { httpOnly: true });
+        res.cookie('user', JSON.stringify(newUser), { httpOnly: true });
+        res.cookie('userPicture' , googleUser.picture)
+        res.cookie("isLoggedIn", "True");
+        //return res.redirect('/');
+
+        return res.status(201).json({message : "User created", user : newUser , Bearer : token});
       
 
 

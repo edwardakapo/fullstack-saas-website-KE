@@ -9,10 +9,33 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import axios from 'axios';
+import Cookies from 'js-cookie'
 
 export default function AccountMenuAvatar(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
+  const logout = () => {
+    // Remove the 'isLoggedIn' cookie
+    Cookies.remove('isLoggedIn');
+
+    // Make a request to the server's logout endpoint
+    axios.post('http://localhost:3000/logout', {}, {withCredentials : true})
+      .then(response => {
+        // Handle successful logout
+        console.log('Logged out:', response);
+        window.location.reload();
+
+      })
+      .catch(error => {
+        // Handle error during logout
+        console.error('Error during logout:', error);
+      });
+
+    // Close the menu
+    handleClose();
+  };
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
       // Override the styles after the menu is opened
@@ -94,7 +117,7 @@ export default function AccountMenuAvatar(props) {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={logout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

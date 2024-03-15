@@ -6,11 +6,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import axios from 'axios'
+import {login,register,handleGoogleLogin}  from './utils/auth';
+import { toast } from 'react-toastify';
 
 export default function FormDialogButton(props) {
     const [open, setOpen] = React.useState(false);
-    const [isSignUp, setIsSignUp] = React.useState(true)
+    const [isSignUp, setIsSignUp] = React.useState(false)
   
     const handleClickOpen = () => {
       setOpen(true);
@@ -23,33 +24,6 @@ export default function FormDialogButton(props) {
     const handleToggle = () => {
       setIsSignUp(!isSignUp);
     };
-
-    const register = (e) =>{
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const formJson = Object.fromEntries(formData.entries());
-      console.log(formJson);
-      axios.post('http://localhost:3000/register', formJson, {withCredentials : true})
-      .then(response => {
-        if (response.status === 200) {
-          // Store the JWT in localStorage
-          localStorage.setItem('jwt', response.data.token);
-          // Refresh the page
-          // Set isLoggedIn to true
-          localStorage.setItem('isLoggedIn', 'true');
-          window.location.reload();
-        }
-      })
-      .catch(error => {
-        console.error('Error during login:', error);
-      });
-      handleClose();
-      
-    }
-
-    const login = (e) => {
-      e.preventDefault();
-    }
   
     return (
       <React.Fragment>
@@ -61,7 +35,16 @@ export default function FormDialogButton(props) {
           onClose={handleClose}
           PaperProps={{
             component: 'form',
-            onSubmit: isSignUp ? register : login,
+            onSubmit: (e) => {
+              e.preventDefault();
+              if (isSignUp) {
+                register(e, handleClose);
+
+              } else {
+                login(e, handleClose);
+
+              }
+            },
           }}
         >
           <DialogTitle>{isSignUp ? 'Sign Up' : 'Sign In'}</DialogTitle>
@@ -113,10 +96,10 @@ export default function FormDialogButton(props) {
                   autoFocus
                   required
                   margin="dense"
-                  id="email"
-                  name="email"
-                  label="Email Address"
-                  type="email"
+                  id="username"
+                  name="username"
+                  label="Username"
+                  type="text"
                   fullWidth
                   variant="standard"
                 />
@@ -149,7 +132,7 @@ export default function FormDialogButton(props) {
                 <p style={{ margin: '0 10px' }}>OR</p>
                 <hr style={{ flex: 1 }} />
               </div>
-              <Button variant="contained" color="primary" style={{ width: '50%', marginLeft : '25%' }}>
+              <Button variant="contained" color="primary" style={{ width: '50%', marginLeft : '25%' }} onClick={handleGoogleLogin}>
                 Login with Google
               </Button>
             </div>

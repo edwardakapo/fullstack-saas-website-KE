@@ -1,5 +1,8 @@
 const mongoose = require("mongoose")
 
+
+
+
 const likeSchema = new mongoose.Schema({
     userId: { type: mongoose.ObjectId, required: true },
     likeType: { type: String, required: true }
@@ -29,5 +32,28 @@ const postSchema = new mongoose.Schema( {
 });
 
 postSchema.index({title : "text" , body : "text"})
+// Add a method to the postSchema to update the counts
+postSchema.methods.updateCounts = function() {
+    this.numberOfComments = this.comments.length;
 
+    // Assuming 'likeType' can be 'like' or 'dislike'
+    this.numberOfLikes = this.likes.filter(like => like.likeType === 'like').length;
+    this.numberOfDislikes = this.likes.filter(like => like.likeType === 'dislike').length;
+
+    return this.save(); // Save the updated post document
+};
+
+// Rest of your postSchema code
 module.exports = mongoose.model("Post" , postSchema)
+
+
+
+
+
+
+
+
+
+
+
+

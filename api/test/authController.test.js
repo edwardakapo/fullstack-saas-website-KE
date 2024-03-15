@@ -84,7 +84,7 @@ describe('AUTH Controller Tests', () => {
                     console.error('Error occured:', err);
                     return done(err)
                 }
-                expect(res).to.have.status(400);
+                expect(res).to.have.status(401);
                 done();
             })    
         });
@@ -202,6 +202,35 @@ describe('AUTH Controller Tests', () => {
                     password : "mytestloginpassword",
                 }
                 agent
+                .post('/login')
+                .send(user)
+                .end((err, res) => {
+                    if (err) {
+                        console.error('Error occurred:', err);
+                        return done(err);
+                    }
+                    expect(res).to.have.status(200);
+            
+            
+                    agent
+                        .get('/testAuthRoute')
+                        .end((err, res) => {
+                            if (err) {
+                                console.error('Error occurred:', err);
+                                return done(err);
+                            }
+                            expect(res).to.have.status(200);
+                            done();
+                        });
+                });
+            });
+
+            it('User Should Login and logout', (done) => {
+                let user = {
+                    username : "mytestloginusername",
+                    password : "mytestloginpassword",
+                }
+                agent
                     .post('/login')
                     .send(user)
                     .end((err, res) => {
@@ -210,11 +239,8 @@ describe('AUTH Controller Tests', () => {
                             return done(err)
                         }
                         expect(res).to.have.status(200);
-                        expect(res.body).to.have.property('Token');
-                        jwt = res.body.Token
                             agent
-                            .get('/testAuthRoute')
-                            .set('Authorization' , `Bearer ${jwt}`) 
+                            .post('/logout')
                             .end((err, res) => {
                                 if(err){
                                     console.error('Error occured:', err);
@@ -227,39 +253,6 @@ describe('AUTH Controller Tests', () => {
                         
                     });
             });
-
-        it('User Should Login and logout', (done) => {
-            let user = {
-                username : "mytestloginusername",
-                password : "mytestloginpassword",
-            }
-            agent
-                .post('/login')
-                .send(user)
-                .end((err, res) => {
-                    if(err){
-                        console.error('Error occured:', err);
-                        return done(err)
-                    }
-                    expect(res).to.have.status(200);
-                    expect(res.body).to.have.property('Token');
-                    jwt = res.body.Token
-                        agent
-                        .post('/logout')
-                        .set('Authorization' , `Bearer ${jwt}`) 
-                        .end((err, res) => {
-                            if(err){
-                                console.error('Error occured:', err);
-                                return done(err)
-                            }
-                            expect(res).to.have.status(200);
-                            done();
-                        });
-
-                    
-                });
-        });
-
 
             it('User should not Login with wrong password', (done) => {
                 let user = {
@@ -367,9 +360,7 @@ describe('AUTH Controller Tests', () => {
                             });
                     });
             });
-
         });
-
     });
 
     describe('Logout Testing', () => {
@@ -391,13 +382,10 @@ describe('AUTH Controller Tests', () => {
                     return done(err)
                 }
                 expect(res).to.have.status(200);
-                expect(res.body).to.have.property('Token');
-                let jwt = res.body.Token
                 
                 //logout
                 agent
                 .post('/logout')
-                .set('Authorization' , `Bearer ${jwt}`) 
                 .end((err, res) => {
                     if(err){
                         console.error('Error occured:', err);
@@ -425,30 +413,25 @@ describe('AUTH Controller Tests', () => {
                     return done(err)
                 }
                 expect(res).to.have.status(200);
-                expect(res.body).to.have.property('Token');
-                let jwt = res.body.Token
                 
                 // first logout
                 agent
                 .post('/logout')
-                .set('Authorization' , `Bearer ${jwt}`) 
                 .end((err, res) => {
                     if(err){
                         console.error('Error occured:', err);
                         return done(err)
                     }
                     expect(res).to.have.status(200);
-                    let secondJwt = res.body.Token
                         // second Logout
                         agent
                         .post('/logout')
-                        .set('Authorization' , `Bearer ${secondJwt}`) 
                         .end((err, res) => {
                             if(err){
                                 console.error('Error occured:', err);
                                 return done(err)
                             }
-                            expect(res).to.have.status(401);
+                            expect(res).to.have.status(402);
                             done()
                         })
                     
@@ -473,38 +456,32 @@ describe('AUTH Controller Tests', () => {
                     return done(err)
                 }
                 expect(res).to.have.status(200);
-                expect(res.body).to.have.property('Token');
-                let jwt = res.body.Token
                 
                 //logout
                 agent
                 .post('/logout')
-                .set('Authorization' , `Bearer ${jwt}`) 
                 .end((err, res) => {
                     if(err){
                         console.error('Error occured:', err);
                         return done(err)
                     }
                     expect(res).to.have.status(200);
-                    expect(res.body).to.not.have.property('Token');
-                    let secondjwt = res.body.Token
                     
                         //test with autorized route
                         agent
                         .get('/testAuthRoute')
-                        .set('Authorization' , `Bearer ${secondjwt}`) 
                         .end((err, res) => {
                             if(err){
                                 console.error('Error occured:', err);
                                 return done(err)
                             }
-                            expect(res).to.have.status(401);
+                            expect(res).to.have.status(402);
                             done()
                         })
                 })
             });
 
-        })
+        });
 
     });
 });

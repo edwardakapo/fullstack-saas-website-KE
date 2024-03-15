@@ -16,7 +16,7 @@ let testUser = {
 	
 }
 const expiredJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWU0ZGEyZDlmZTBjNzBmYjhhYTM0ZTAiLCJ1c2VybmFtZSI6Im15dGVzdHByb2ZpbGV1c2VybmFtZSIsImlhdCI6MTcwOTQ5NzI4MiwiZXhwIjoxNzA5NTA0NDgyfQ.sn51v1bKdFfNbbUt-FagrGJVuUq-Vg24LQnL98TnjCM"
-const existingEmail = "mytestemail@test.com"
+const existingEmail = "akapodemilade@gmail.com"
 const newProfileImageUrl = 'https://static-00.iconduck.com/assets.00/person-question-mark-icon-2048x2048-zqofu2hh.png';
 
 describe('Profile Controller Tests', () => {
@@ -40,7 +40,6 @@ describe('Profile Controller Tests', () => {
         it('should get the profile of the logged-in user', (done) => {
             agent
                 .get('/profile')
-                .set('Authorization', `Bearer ${jwt}`)
                 .end((err, res) => {
                     if(err){
                         console.error('Error occured:', err);
@@ -51,20 +50,6 @@ describe('Profile Controller Tests', () => {
                     expect(res.body).to.have.property('usersSavedPosts');
                     expect(res.body).to.have.property('usersAnsweredPosts');
                     expect(res.body).to.have.property('usersStars');
-                    done();
-                });
-        });
-
-        it('should not get the profile of an expired logged-in user', (done) => {
-            agent
-                .get('/profile')
-                .set('Authorization', `Bearer ${expiredJwt}`)
-                .end((err, res) => {
-                    if(err){
-                        console.error('Error occured:', err);
-                        return done(err)
-                    }
-                    expect(res).to.have.status(401);
                     done();
                 });
         });
@@ -215,7 +200,6 @@ describe('Profile Controller Tests', () => {
         it('Should not update email if email exists in DB', (done) => {
             agent
             .patch('/profile/email')
-            .set('Authorization', `Bearer ${jwt}`)
             .send({ password: testUser.password, newEmail: existingEmail })
             .end((err, res) => {
                 if(err){

@@ -35,8 +35,9 @@ const auth = require("./middleware/auth")
 app.use(authController)
 app.use(postController)
 app.use(profileController)
-app.use(refreshCookie)
+//app.use(refreshCookie)
 mongoDatabase.connect(MONGO_URI)
+//console.log = function() {};
 
 const port = process.env.PORT || 3000;
 
