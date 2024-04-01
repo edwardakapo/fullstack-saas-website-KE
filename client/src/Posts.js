@@ -1,32 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import PostCards from './PostCards';
 
 export default function Posts(props) {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    axios.get('http://localhost:3000/post', {withCredentials : true})
-      .then((response) => {
-        setPosts(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching posts:', error);
-      });
-  }, []);
+const postData = props.posts
+const addDeleteButton = props.addDelete || false
+const addUnsaveButton = props.addUnsave || false
+const addSaveButton = props.addSave || false
 
   return (
     <div className="background-black">
-      {posts.map((post) => (
-        <PostCards 
+      {postData.map((post) => (
+        <PostCards
+        maxWidth={200} 
         key={post._id}
         userName={post.author} 
         id={post._id} 
         title={post.title} 
         text ={post.body}
         numberOfComments={post.numberOfComments}
-        numberOfLikes={post.numberOfLikes}
-        numberOfDislikes={post.numberOfDislikes}
+        likes={post.numberOfLikes - post.numberOfDislikes}
+        isDelete={addDeleteButton}
+        isUnsave={addUnsaveButton}
+        isSave={addSaveButton}
         />
       ))}
     </div>

@@ -184,6 +184,64 @@ router.patch("/post/:id/comment", auth, async (req, res) => {
     }
 });
 
+router.patch("/post/:id/save", auth, async (req, res) => {
+    const postId = req.params.id;
+    const userId = req.user._id;
+    console.log("user is trying to save post");
+
+    try {
+        // Check if post exists
+        const post = await Post.findById(postId);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        // Check if user exists
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if the post is already saved to prevent duplicates
+        if (!user.usersSavedPosts.includes(postId)) {
+            user.usersSavedPosts.push(postId);
+            await user.save(); // Save the updated user document
+            res.status(200).json({ message: "Post saved successfully" });
+        } else {
+            res.status(400).json({ message: "Post already saved" });
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "An error occurred while saving the post" });
+    }
+});
+
+router.patch("/post/:id/unsave", auth, async (req, res) => {
+    const postId = req.params.id;
+    const userId = req.user._id;
+    console.log("user is trying to unsave post");
+
+    try {
+        // Check if user exists
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if the post is actually saved
+        if (user.usersSavedPosts.includes(postId)) {
+            // Remove the post from the usersSavedPosts array
+            await User.updateOne({ _id: userId }, { $pull: { usersSavedPosts: postId } });
+            res.status(200).json({ message: "Post unsaved successfully" });
+        } else {
+            res.status(400).json({ message: "Post not found in saved posts" });
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "An error occurred while unsaving the post" });
+    }
+});
+
 //upvote change like type to upvote if it already exists as upvote
 router.patch("/post/:id/upvote", auth, async (req, res) => {
     const postId = req.params.id;
@@ -229,7 +287,6 @@ router.patch("/post/:id/downvote", auth, async (req, res) => {
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
         }
-
         // Find the like by this user
         const like = post.likes.find(like => like.userId.equals(userId));
 

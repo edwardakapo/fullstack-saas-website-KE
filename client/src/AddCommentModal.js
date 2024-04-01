@@ -8,23 +8,34 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 
 export default function AddCommentModal(props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
+    if (!checkLoggedIn()){
+      alert('You must be logged in to view comments.');
+      return;
+    }
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+  const checkLoggedIn = () =>{
+    return Cookies.get('isLoggedIn') ? true : false;
+}
 
   return (
     <React.Fragment>
-      <Button size="small" onClick={handleClickOpen} color="secondary">
-        <AddCommentIcon /> {props.amount}
+      <Button size="large" onClick={handleClickOpen} color="secondary">
+        <AddCommentIcon sx={props.styles} /> 
+        <div className='text-2xl font-bold px-2'>
+          {props.amount}
+        </div>
       </Button>
       <Dialog
         open={open}

@@ -7,7 +7,7 @@ const bycrypt = require('bcryptjs')
 
 // get profile get all posts from user
 router.get("/profile" , auth , async(req , res) => {
-
+    console.log("tried to get posts from user profile")
     try {
 		if (!req.user._id) {
 			return res.status(400).json({message : "error no user id"});
@@ -15,15 +15,14 @@ router.get("/profile" , auth , async(req , res) => {
         const user = await User.findById(req.user._id)
             .populate('usersPosts')
             .populate('usersSavedPosts')
-            .populate('usersAnsweredPosts');
 
         res.status(200).json({
             usersPosts: user.usersPosts,
             usersSavedPosts: user.usersSavedPosts,
-            usersAnsweredPosts: user.usersAnsweredPosts,
             usersStars: user.stars
         });
     } catch (err) {
+        console.error(err)
         res.status(500).json({ message: err.message });
     }
 

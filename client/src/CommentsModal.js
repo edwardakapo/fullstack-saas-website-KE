@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -10,11 +10,11 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-import { CardActionArea, CardActions } from '@mui/material';
+import { CardActionArea } from '@mui/material';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
   },
   '& .MuiDialogActions-root': {
     padding: theme.spacing(1),
@@ -26,6 +26,7 @@ export default function CommentsModal(props) {
   const [comments, setComments] = useState([]);
 
   const handleClickOpen = () => {
+
     axios.get(`http://localhost:3000/post/${props.postId}/comments`, {withCredentials : true})
       .then((response) => {
         setComments(response.data);
@@ -42,18 +43,18 @@ export default function CommentsModal(props) {
 
   return (
     <React.Fragment>
-      <CardActionArea onClick={handleClickOpen}>
-        <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            Posted by {props.userName}
-          </Typography>
-          <Typography gutterBottom variant="h3" component="div"sx={{ mb: 5 }}>
-            {props.title}
-          </Typography>
-          <Typography variant="h6" color="text.primary">
-            {props.text}
-          </Typography>
-        </CardContent>
+      <CardActionArea  onClick={handleClickOpen} >
+          <CardContent>
+            <Typography variant="body2" color="text.secondary">
+              Posted by {props.userName}
+            </Typography>
+            <Typography gutterBottom variant="h3" component="div"sx={{mb: 5 }}>
+              {props.title}
+            </Typography>
+            <Typography variant="h6" color="text.primary">
+              {props.text}
+            </Typography>
+          </CardContent>
       </CardActionArea>
       <BootstrapDialog
         onClose={handleClose}

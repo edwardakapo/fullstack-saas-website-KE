@@ -7,7 +7,9 @@ const  { APP_TOKEN } = process.env;
 const verifyToken = (req, res, next) => {
     // Get the token from the 'token' cookie
     const token = req.cookies.token;
-
+    if (req.cookies.isLoggedIn) {
+        res.cookie("isLoggedIn", "True", { maxAge: 3600000});
+    }
     if (!token) {
         console.log("token invalid CHECK AUTHORIZATION HEADER")
         return res.status(402).json("A token is required for authentication")

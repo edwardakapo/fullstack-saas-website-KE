@@ -6,15 +6,16 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import axios from 'axios';
 import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom';
 
 export default function AccountMenuAvatar(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const logout = () => {
     // Remove the 'isLoggedIn' cookie
@@ -36,6 +37,8 @@ export default function AccountMenuAvatar(props) {
     // Close the menu
     handleClose();
   };
+
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
       // Override the styles after the menu is opened
@@ -69,6 +72,7 @@ export default function AccountMenuAvatar(props) {
         onClick={handleClose}
         componentsProps={{
           paper: {
+            square : false,
             elevation: 0,
             sx: {
               overflow: 'visible',
@@ -98,31 +102,29 @@ export default function AccountMenuAvatar(props) {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
+      <div className='px-4'>
+
+        <MenuItem onClick={() => {navigate('/profile')}}>
+          <div className='flex items-center'>
+            <Avatar src={props.src} sx={{ mr: 4 }} /> 
+            Profile
+          </div>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => {navigate('/profile/settings')}}>
           <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
+            <Settings sx={{ mr: 3 }} fontSize="large" />
           </ListItemIcon>
           Settings
         </MenuItem>
+        <Divider />
         <MenuItem onClick={logout}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
+          <ListItemIcon >
+            <Logout sx={{ mr: 3.5 , ml: 0.5}} fontSize="large" />
           </ListItemIcon>
           Logout
         </MenuItem>
+      </div>
       </Menu>
     </React.Fragment>
   );

@@ -56,10 +56,15 @@ router.route('/login')
             const token = jwt.sign (
                 payload , secret , {expiresIn: '2h'}
             );
+
+            const publicUserInfo = {
+                picture : user.profileImageUrl,
+                username : user.username,
+            }
             res.cookie('token', token, { httpOnly: true });
             res.cookie('user', JSON.stringify(user), { httpOnly: true });
-            res.cookie('userPicture' , user.profileImageUrl)
-            res.cookie("isLoggedIn", "True");
+            res.cookie('userInfo' , JSON.stringify(publicUserInfo));
+            res.cookie("isLoggedIn", "True", {maxAge: 3600000});
             res.status(200).json({Token : token , userObj : user})
         }
         else {
@@ -127,12 +132,14 @@ router.route("/register")
         );
         console.log('saving user to database')
         await user.save()
-
+        const publicUserInfo = {
+            picture : user.profileImageUrl,
+            username : user.username,
+        }
         res.cookie('token', token, { httpOnly: true });
         res.cookie('user', JSON.stringify(user), { httpOnly: true });
-        res.cookie('userPicture' , user.profileImageUrl)
-
-        res.cookie("isLoggedIn", "True");
+        res.cookie('userInfo' , JSON.stringify(publicUserInfo));
+        res.cookie("isLoggedIn", "True", {maxAge: 3600000});
         
         res.status(200).json({user : user , Token : token});
         console.log("user created")
@@ -156,6 +163,8 @@ router.route("/logout")
         // Clear the 'token' and 'user' cookies
         res.clearCookie('token');
         res.clearCookie('user');
+        res.clearCookie('userInfo')
+        res.clearCookie('isLoggedIn')
         res.status(200).send('cookies deleted');
     }
     catch (err) {
@@ -194,10 +203,14 @@ router.get("/oauth/google", async (req, res) => {
             payload , secret , {expiresIn: '2h'}
         );
         // Set cookies
+        const publicUserInfo = {
+            picture : user.profileImageUrl,
+            username : user.username,
+        }
         res.cookie('token', token, { httpOnly: true });
         res.cookie('user', JSON.stringify(user), { httpOnly: true });
-        res.cookie('userPicture' , googleUser.picture)
-        res.cookie("isLoggedIn", "True");
+        res.cookie('userInfo' , JSON.stringify(publicUserInfo));
+        res.cookie("isLoggedIn", "True", {maxAge: 3600000});
         //return res.redirect('/');
         
         return res.status(200).json({message : "User exists logging in" ,user : user , Bearer : token});
@@ -226,10 +239,14 @@ router.get("/oauth/google", async (req, res) => {
         );
         console.log("user created")
         // Set cookies
+        const publicUserInfo = {
+            picture : newUser.profileImageUrl,
+            username : newUser.username,
+        }
         res.cookie('token', token, { httpOnly: true });
-        res.cookie('user', JSON.stringify(newUser), { httpOnly: true });
-        res.cookie('userPicture' , googleUser.picture)
-        res.cookie("isLoggedIn", "True");
+        res.cookie('user', JSON.stringify(user), { httpOnly: true });
+        res.cookie('userInfo' , JSON.stringify(publicUserInfo));
+        res.cookie("isLoggedIn", "True", {maxAge: 3600000});
         //return res.redirect('/');
 
         return res.status(201).json({message : "User created", user : newUser , Bearer : token});

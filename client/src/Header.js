@@ -13,8 +13,8 @@ export default function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     let userPic = ""
 
-    if (Cookies.get('userPicture')) {
-        userPic = Cookies.get('userPicture'); // parse the user cookie
+    if (Cookies.get('userInfo')) {
+        userPic = JSON.parse(Cookies.get('userInfo')).picture; // parse the user cookie
     }
     useEffect(() => {
         const loggedIn = Cookies.get('isLoggedIn') === 'True'; // check if isLoggedIn cookie exists and is 'true'

@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/system';
 import PostFormButton from './PostFormButton';
 import DevCoding from './DevCoding.svg'; // import the image
+import Cookies from 'js-cookie';
 
 
 const Styles={
@@ -14,7 +15,9 @@ const Styles={
 
 
 export default function HeroSection() {
-
+    const checkLoggedIn = () =>{
+        return Cookies.get('isLoggedIn') ? true : false;
+   }
     return (
 
     <section className="h-full w-full flex flex-col justify-center space-y-10 text-left">
@@ -24,7 +27,18 @@ export default function HeroSection() {
         </div>
         <div className="flex space-x-20">
             <h2 className="text-6xl font-bold w-1/2">Where Coding Questions Find Expert Answers!</h2>
-            <PostFormButton variant='outlined' text ="Post A Question" fontSize="inherit"sx = {Styles}/>
+            {/*
+                <PostFormButton variant='outlined' text ="Post A Question" fontSize="inherit"sx = {Styles}/>
+                */
+            }  
+            <Button variant='outlined' text ="Post A Question" fontSize="inherit"sx = {Styles} onClick={ () => {
+                if (!checkLoggedIn()){
+                alert("you need to login");
+                return
+                }
+            }}>
+                 Post A Question
+            </Button>
         </div>
         <div className='pt-24 text-center text-5xl font-bold'>
             <h2> Or Answer Peoples Questions Below to get Points!</h2>

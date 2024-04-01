@@ -7,9 +7,8 @@ const userSchema = new mongoose.Schema({
     googleId : {type : String, required : false},
     profileImageUrl: { type: String, required: false },
     stars : { type : Number , required : false , default : 0},
-    usersPosts : { type : [mongoose.Schema.Types.ObjectId] , required : false},
-    usersSavedPosts : { type : [mongoose.Schema.Types.ObjectId] , required : false},
-    usersAnsweredPosts : { type : [mongoose.Schema.Types.ObjectId] , required : false},
+    usersPosts : [{ type : mongoose.Schema.Types.ObjectId , ref: 'Post'}],
+    usersSavedPosts : [{ type : mongoose.Schema.Types.ObjectId , ref: 'Post'}],
 
 });
 
