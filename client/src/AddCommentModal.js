@@ -8,6 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import { Avatar, TextField  } from '@mui/material';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 
@@ -40,6 +41,8 @@ export default function AddCommentModal(props) {
       <Dialog
         open={open}
         onClose={handleClose}
+        fullWidth 
+        maxWidth='md'
         PaperProps={{
           component: 'form',
           onSubmit: (event) => {
@@ -65,10 +68,12 @@ export default function AddCommentModal(props) {
           <DialogContentText>
             Please write your comment below.
           </DialogContentText>
-          <TextareaAutosize
+          <TextField
             autoFocus
             required
-            minRows={3}
+            multiline
+            fullWidth
+            rows={4}
             name="comment"
             placeholder="Add a comment"
           />

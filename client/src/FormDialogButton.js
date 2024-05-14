@@ -14,6 +14,7 @@ export default function FormDialogButton(props) {
     const [isSignUp, setIsSignUp] = React.useState(false)
   
     const handleClickOpen = () => {
+      
       setOpen(true);
     };
   

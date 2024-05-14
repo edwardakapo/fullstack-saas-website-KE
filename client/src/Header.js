@@ -2,8 +2,6 @@ import React, {useState, useEffect} from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import LoginButton from './LoginButton';
 import { styled } from '@mui/system';
-import Avatar from '@mui/material/Avatar';
-import Logo from './logo.png';
 import Cookies from 'js-cookie';
 import AccountMenuAvatar from './AccountMenuAvatar';
 
