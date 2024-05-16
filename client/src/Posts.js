@@ -3,9 +3,7 @@ import PostCards from './PostCards';
 
 export default function Posts(props) {
 const postData = props.posts
-const addDeleteButton = props.addDelete || false
-const addUnsaveButton = props.addUnsave || false
-const addSaveButton = props.addSave || false
+
 
   return (
     <div className="background-black">
@@ -19,9 +17,10 @@ const addSaveButton = props.addSave || false
         text ={post.body}
         numberOfComments={post.numberOfComments}
         likes={post.numberOfLikes - post.numberOfDislikes}
-        isDelete={addDeleteButton}
-        isUnsave={addUnsaveButton}
-        isSave={addSaveButton}
+        isDelete={props.addDelete || false}
+        isUnsave={props.addUnsave || false}
+        isSave={props.addSave || false}
+        isUserProfile={props.addStar || false}
         />
       ))}
     </div>

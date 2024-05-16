@@ -4,10 +4,13 @@ import LoginButton from './LoginButton';
 import { styled } from '@mui/system';
 import Cookies from 'js-cookie';
 import AccountMenuAvatar from './AccountMenuAvatar';
+import { useNavigate } from 'react-router-dom';
 
 
 
 export default function Header() {
+  const navigate = useNavigate();
+
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     let userPic = ""
 
@@ -20,18 +23,18 @@ export default function Header() {
     }, []);
 
     return (
-        <header className="flex w-full p-2 justify-between mx-1">
-            <div className='py-5 '>
-                <h1 className="text-5xl font-extrabold">DevHelp</h1>
-            </div>
-            <form action="" className="flex bg-gray-100 my-3 py-4 px-7 space-x-2 h-1/2 w-1/2 border-solid border-4 border-black rounded-full hover:border-hover-blue">
-                <SearchIcon fontSize='large' />
-                <input type="text" className="bg-gray-100 h-8 text-xl outline-none" placeholder="Search DevHelp" />
+        <header className="flex md:w-full w-full md:p-2 p-1 px-2 md:mx-1 justify-between items-center ">
+            <button onClick={() => navigate('/')}>
+                <h1 className="md:text-3xl text-lg font-extrabold">DevHelp</h1>
+            </button>
+            <form action="" className="flex items-center bg-gray-100 md:py-2 py-0.5 md:px-3 md:space-x-2 space-x-1 md:h-1/2 md:w-1/2 w-1/2 border-solid md:border-2 border border-black rounded-full hover:border-hover-blue">
+                <SearchIcon fontSize='icon-small' />
+                <input type="text" className="bg-gray-100 outline-none text-sm" placeholder="Search DevHelp" />
             </form>
             {isLoggedIn ? (
-                <AccountMenuAvatar src={userPic} sx={{ width: 80, height: 80 }} />
+                <AccountMenuAvatar src={userPic} />
             ) : (
-                <LoginButton/>
+                <LoginButton />
             )}
         </header>
     )

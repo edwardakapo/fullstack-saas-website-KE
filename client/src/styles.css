@@ -7,6 +7,32 @@
 body {
     background-color: #fbfefb;
     margin : auto;
-    max-width: 1444px;
-    margin-top: 4rem;
+    max-width: 450px;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
+
+.icon-small {
+    font-size: 24px; /* default size */
+  }
+.small-accountmenu-avatar {
+    width: 30px;
+    height: 30px;
+}
+  @media (min-width: 768px) {
+    body {
+        background-color: #fbfefb;
+        margin : auto;
+        max-width: 1200px;
+        margin-top: 4rem;
+    }
+    .icon-small {
+      font-size: 36px; /* larger size for md screens and up */
+    }
+    .small-accountmenu-avatar {
+        width: 60px;
+        height: 60px;
+    }
+  }

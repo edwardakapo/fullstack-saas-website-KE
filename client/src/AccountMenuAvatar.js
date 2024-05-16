@@ -11,7 +11,29 @@ import Logout from '@mui/icons-material/Logout';
 import axios from 'axios';
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom';
+import { css } from '@mui/system';
 
+const responsiveIconStyle = css({
+  width: 30,
+  height: 30,
+  '@media (min-width: 768px)': {
+    width: 60,
+    height: 60,
+  },
+
+});
+
+const responsivePopupStyle = css({
+  '@media (max-width: 768px)': {
+    width: 150,
+    height: 350,
+    justifyContent: "start",
+  },
+
+});
+
+
+ 
 export default function AccountMenuAvatar(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -61,8 +83,8 @@ export default function AccountMenuAvatar(props) {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar src={props.src} sx={props.sx}></Avatar>
-          </IconButton>
+            <Avatar src={props.src} sx={responsiveIconStyle} />
+            </IconButton>
         </Tooltip>
       <Menu
         anchorEl={anchorEl}
@@ -70,59 +92,64 @@ export default function AccountMenuAvatar(props) {
         open={open}
         onClose={handleClose}
         onClick={handleClose}
+        sx = {responsivePopupStyle}
         componentsProps={{
           paper: {
             square : false,
             elevation: 0,
             sx: {
-              overflow: 'visible',
-              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-              mt: 1.5,
-              '& .MuiAvatar-root': {
-                width: 32,
-                height: 32,
-                ml: -0.5,
-                mr: 1,
-              },
-              '&::before': {
-                content: '""',
-                display: 'block',
-                position: 'absolute',
-                top: 0,
-                right: 14,
-                width: 10,
-                height: 10,
-                bgcolor: 'background.paper',
-                transform: 'translateY(-50%) rotate(45deg)',
-                zIndex: 0,
-              },
             },
           },
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-      <div className='px-4'>
+      <div className='md:px-4'>
 
-        <MenuItem onClick={() => {navigate('/profile')}}>
-          <div className='flex items-center'>
-            <Avatar src={props.src} sx={{ mr: 4 }} /> 
-            Profile
+        <MenuItem onClick={() => {navigate('/profile')}} sx={{padding : 0, margin : 0, width : 0,}}>
+          <div className='grid grid-cols-2 gap-10 px-4 md:flex md:gap-0 md:items-center'>
+            <div>
+                <Avatar src={props.src} sx={{ mr: 4,
+              
+                width: 30,
+                height: 30,
+                '@media (min-width: 768px)': {
+                  width: 40,
+                  height: 40,
+                },
+              
+              }}/> 
+            </div>
+            <div>
+              <p className='pt-1 text-sm md:text-base'>Profile</p>
+            </div>
           </div>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={() => {navigate('/profile/settings')}}>
-          <ListItemIcon>
-            <Settings sx={{ mr: 3 }} fontSize="large" />
-          </ListItemIcon>
-          Settings
+        <MenuItem sx={{padding : 0, margin : 0, width : 0,}} onClick={() => {navigate('/profile/settings')}}>
+          <div className='grid grid-cols-2 gap-10 px-4 md:flex md:gap-0 md:items-center'>
+            <Settings sx={{ mr: 3, 
+                            width: 30,
+                            height: 30,
+                            '@media (min-width: 768px)': {
+                              width: 40,
+                              height: 40,
+                            },}} fontSize="small" />
+            <p className='pt-1 text-sm md:text-base'> Settings</p>
+          </div>
         </MenuItem>
-        <Divider />
-        <MenuItem onClick={logout}>
-          <ListItemIcon >
-            <Logout sx={{ mr: 3.5 , ml: 0.5}} fontSize="large" />
-          </ListItemIcon>
-          Logout
+        <Divider/>
+        <MenuItem onClick={logout} sx={{padding : 0, margin : 0}}>
+          <div className='grid grid-cols-2 gap-10 px-4 md:flex md:gap-0 md:items-center'>
+            <Logout sx={{ mr: 3.5 , ml: 0.5,
+             width: 30,
+             height: 30,
+             '@media (min-width: 768px)': {
+               width: 40,
+               height: 40,
+             }}} fontSize="small" />
+            <p className='pt-1 text-sm md:text-base'> Logout</p>
+          </div>
         </MenuItem>
       </div>
       </Menu>

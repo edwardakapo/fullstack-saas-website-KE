@@ -212,8 +212,8 @@ router.get("/oauth/google", async (req, res) => {
         res.cookie('userInfo' , JSON.stringify(publicUserInfo));
         res.cookie("isLoggedIn", "True", {maxAge: 3600000});
         //return res.redirect('/');
-        
-        return res.status(200).json({message : "User exists logging in" ,user : user , Bearer : token});
+        return res.redirect(process.env.CLIENT_ORIGIN);
+        //return res.status(200).json({message : "User exists logging in" ,user : user , Bearer : token});
 
     }
     else {
@@ -248,8 +248,9 @@ router.get("/oauth/google", async (req, res) => {
         res.cookie('userInfo' , JSON.stringify(publicUserInfo));
         res.cookie("isLoggedIn", "True", {maxAge: 3600000});
         //return res.redirect('/');
+        return res.redirect(process.env.CLIENT_ORIGIN);
 
-        return res.status(201).json({message : "User created", user : newUser , Bearer : token});
+        //return res.status(201).json({message : "User created", user : newUser , Bearer : token});
       
 
 

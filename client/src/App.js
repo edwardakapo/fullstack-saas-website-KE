@@ -13,10 +13,6 @@ function App() {
     <Router>
       <div className="flex-col space-y-32 ">
         <Header />
-        <nav>
-            <Link to="/"><Button>Home</Button></Link>
-            <Link to="/profile"><Button>Profile</Button></Link>
-        </nav>
         <ToastContainer />
         <Routes>
           <Route path="/" element={

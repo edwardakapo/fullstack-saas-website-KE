@@ -27,8 +27,8 @@ const postSchema = new mongoose.Schema( {
     postedAt : {type:Date, default : Date.now},
     likes: [likeSchema],
     comments: [commentSchema],
-    correctSolution : {type : Boolean, required : false}, // marks that post has correct solution 
-    correctPost: {type : commentSchema, required : false} // correct post
+    correctSolution : {type : Boolean, required : false, default: null}, // marks that post has correct solution 
+    correctPost: {type : commentSchema, required : false, default: null} // correct post
 });
 
 postSchema.index({title : "text" , body : "text"})

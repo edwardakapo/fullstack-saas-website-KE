@@ -17,7 +17,7 @@ export default function AddCommentModal(props) {
 
   const handleClickOpen = () => {
     if (!checkLoggedIn()){
-      alert('You must be logged in to view comments.');
+      alert('You must be logged in to add a comment.');
       return;
     }
     setOpen(true);

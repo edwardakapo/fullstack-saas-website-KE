@@ -88,7 +88,7 @@ export default function ProfilePage() {
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
-              <Tab label="All Posts" value="allposts" />
+              <Tab label="My Posts" value="allposts" />
               <Tab label="Saved Posts" value="savedposts" />
               {/*
                 <Tab label="Settings" value="settings" />
@@ -96,8 +96,8 @@ export default function ProfilePage() {
             </TabList>
           </Box>
           <TabPanel value="allposts">
-            All Posts
-            <Posts posts={posts.usersPosts} addDelete={true}/>
+            My Posts
+            <Posts posts={posts.usersPosts} addDelete={true} addStar={true}/>
           </TabPanel>
           <TabPanel value="savedposts">
             Saved Posts

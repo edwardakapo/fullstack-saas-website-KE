@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import FormDialogButton from './FormDialogButton';
 import { Avatar, TextField  } from '@mui/material';
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+import AddIcon from '@mui/icons-material/Add';
 import { Button } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -121,18 +121,20 @@ export default function HeroSection() {
                 </div>
             </section>
         ) : (
-            <div className='h-full w-full flex flex-col items-center justify-center space-y-10 text-left'>
-                <div className="w-2/3 shadow-md  p-6 ">
-                    <div className='flex'>
-                        <div className='pr-32'>
-                            <Avatar src={userPic} sx={{ width: 60, height: 60 }}></Avatar>
+            <div className=' flex flex-col items-center justify-center'>
+                <div className="w-1/2 shadow-lg border rounded align-center items-center p-2">
+                    <div className=' flex items-center'>
+                        <div className='pl-5 w-1/4'>
+                            <Avatar src={userPic} sx={{ width: 30, height: 30 }}></Avatar>
                         </div>
-                        <button type="button" onClick={handleClickOpen}>
-                            <div className='space-x-5 '>
-                                <TextField id="outlined-basic" label="Create a Post" variant="outlined" InputProps={{ readOnly: true, }} sx={{ width: 600, height: 60 }}/>
-                                <AddBoxOutlinedIcon sx={{ width: 60, height: 60 }}/>
-                            </div>
-                        </button>
+                        <div className='pr-5 w-3/4'>
+                            <button type="button" onClick={handleClickOpen} className='w-full'>
+                                <div className='space-x-3 flex items-center w-full'>
+                                    <input placeholder='Create a post' type='text' size="10" readOnly='true' className='border py-1 px-4 w-full'></input>
+                                    <AddIcon sx={{ width: 30, height: 30 }}/>
+                                </div>
+                            </button>
+                        </div>
                         <Dialog open={open} onClose={handleClose} fullWidth maxWidth='md'>
                             <DialogTitle>Post Anything You Want</DialogTitle>
                             <DialogContent>

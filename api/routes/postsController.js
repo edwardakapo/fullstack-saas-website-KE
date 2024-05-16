@@ -97,7 +97,7 @@ router.get("/post/:id/likes", async (req, res) => {
 // Return a list of all the comments on a post
 router.get("/post/:id/comments", async (req, res) => {
     const postId = req.params.id;
-
+    var comments = []
     try {
         const post = await Post.findById(postId);
         if (!post) {
@@ -105,13 +105,12 @@ router.get("/post/:id/comments", async (req, res) => {
         }
 
         // Assuming 'comments' is a field in your Post model
-        const comments = post.comments;
-        if (comments.length === 0) {
-            return res.status(404).json({ message: "No comments found for this post" });
-        }
-        
+        comments = post.comments;
+        const isCorrectSolution = post.correctSolution;
+        const correctPost = post.correctPost;
 
-        res.status(200).json(comments);
+
+        res.status(200).json({comments, correctPost, isCorrectSolution});
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -313,36 +312,64 @@ router.patch("/post/:id/downvote", auth, async (req, res) => {
     }
 });
 
-router.patch("/post/:id/comments/setcorrect/:commentId", auth, async(req, res) => {
+router.patch("/post/:id/comments/:commentId/setcorrect", auth, async(req, res) => {
     const postId = req.params.id;
     const userId = req.user._id;
     const commentId = req.params.commentId;
 
     try {
-        // If user does not own root post then request is invalid
         const post = await Post.findById(postId);
-        if(!post){
-            return res.status(404).json({message : "post not found"})
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
         }
 
-        if(post.authorId.equals(userId)){
-            return res.status(403).json({message : "User does not have permission to set correct post"})
+        if (!post.authorId.equals(userId)) {
+            return res.status(403).json({ message: "User does not have permission to set correct post" });
         }
 
-        // Find the comment in the comments array
         const comment = post.comments.id(commentId);
         if (!comment) {
-            return res.status(404).json({message : "comment not found"})
+            return res.status(404).json({ message: "Comment not found" });
         }
 
-        // Set the comment as the correct post and set correctSolution to true
-        post.correctPost = comment;
-        post.correctSolution = true;
+        // Fetch the user involved only once
+        const userToAdjust = await User.findById(comment.userId);
 
+        // Check if the same comment is being toggled
+        if (post.correctPost && post.correctPost._id.equals(commentId)) {
+            // Unset if the same comment is clicked again
+            userToAdjust.stars -= 1; // Decrement stars since un-starring
+            post.correctPost = null;
+            post.correctSolution = false;
+        } else {
+            // Check if the previous correct comment belongs to the same user
+            const isSameUser = post.correctPost && post.correctPost.userId.equals(comment.userId);
+
+            // Set new correct comment
+            if (post.correctPost) {
+                // If there was another correct comment and it's not the same user, decrement stars from that user
+                if (!isSameUser) {
+                    const previousUser = await User.findById(post.correctPost.userId);
+                    previousUser.stars -= 1;
+                    await previousUser.save();
+                }
+            }
+            // Only increment stars if the previous correct comment was not from the same user
+            if (!isSameUser) {
+                userToAdjust.stars += 1; // Increment stars for new correct comment user
+            }
+            post.correctPost = comment;
+            post.correctSolution = true;
+        }
+
+        // Save changes
+        await userToAdjust.save();
         await post.save();
-        res.status(200).json(post);
+
+        res.status(200).json({ correctComment: comment, correctSolution: post.correctSolution });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.log(err);
+        res.status(500).json({ message: "An error occurred while updating the correct comment" });
     }
 });
 
