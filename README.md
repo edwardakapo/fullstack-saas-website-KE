@@ -2,8 +2,6 @@
 
 A full-stack web application that enables developers to post questions, share knowledge, and earn points through community engagement. Built using the MERN stack with comprehensive testing and security features.
 
-![Project Screenshot Placeholder]
-
 ## 🚀 Features
 
 - **User Authentication**
@@ -168,9 +166,6 @@ npm test
 - Content categorization
 - Mobile application
 
-## 📄 License
-
-[MIT License] (Link to license)
 
 ## 🤝 Contributing
 
@@ -178,7 +173,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 👥 Author
 
-[Your Name] - [Your Contact Information/Social Links]
+Edward Akapo - https://edwardakapo.com/
 
 ---
 Built with ❤️ using the MERN stack 
